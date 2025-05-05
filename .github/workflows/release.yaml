@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: blazepay-oss/blazepay-grpc
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -19,9 +19,8 @@ jobs:
       - name: Bump version and publish
         run: |
           npm ci
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config commit.gpgSign false
-          npm version patch -m "chore(release): %s"
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PAT }}" > ~/.npmrc
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          npm version patch -m "release: %s"
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
           npm publish
