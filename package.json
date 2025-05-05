@@ -1,5 +1,5 @@
 {
-  "name": "@blazepay/grpc",
+  "name": "@blazepay-oss/blazepay-grpc",
   "version": "0.0.1",
   "description": "gRPC server for Blazepay",
   "type": "module",
