@@ -9,7 +9,7 @@ Inspired on [grpc-middleware@1.0.0](https://www.npmjs.com/package/grpc-middlewar
 Build your grpc server as usual. However, import like this:
 
 ```ts
-import { Server } from "@blazepay/grpc";
+import { Server } from "@blazepay-oss/blazepay-grpc";
 ```
 
 The call to `grpc.ServerOptions` can now take up to two additional arguments.
