@@ -1,0 +1,29 @@
+name: Release to NPM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build the project
+        run: npm run build
+      - name: Configure Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Bump version and publish
+        run: |
+          npm version patch -m "chore(release): %s"
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }}
