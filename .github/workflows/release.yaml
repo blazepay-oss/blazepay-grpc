@@ -9,21 +9,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          repository: blazepay-oss/blazepay-grpc
+          token: ${{ secrets.GH_PAT }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "23"
-      - name: Install dependencies
-        run: npm ci
-      - name: Build the project
-        run: npm run build
-      - name: Configure Git user
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Bump version and publish
         run: |
+          npm ci
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config commit.gpgSign false
           npm version patch -m "chore(release): %s"
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PAT }}" > ~/.npmrc
           npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }}

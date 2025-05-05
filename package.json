@@ -1,6 +1,6 @@
 {
   "name": "@blazepay/grpc",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "gRPC server for Blazepay",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,7 +15,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --noEmit",
+    "version": "tsc && git add -A -f dist",
+    "postversion": "git push && git push --tags"
   },
   "author": "@aimproxy",
   "license": "GPL-3.0",
