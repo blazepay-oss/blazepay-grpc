@@ -1,6 +1,6 @@
 {
   "name": "@blazepay-oss/blazepay-grpc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "gRPC server for Blazepay",
   "type": "module",
   "main": "./dist/index.js",
