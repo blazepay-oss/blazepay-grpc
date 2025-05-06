@@ -3,13 +3,13 @@ import type { ServiceDefinition } from "@grpc/proto-loader";
 /**
  * gRPC format error.
  */
-export type GrpcFormatError = (e: Readonly<ServerErrorResponse>) => ServerErrorResponse;
+export type GrpcFormatError = (e: unknown) => ServerErrorResponse;
 /**
  * gRPC logger.
  */
 export type GrpcLogger = {
     debug: (message: string) => void;
-    error: (e: ServerErrorResponse, message: string) => void;
+    error: (e: unknown, message: string) => void;
     info: (message: string) => void;
     warn: (message: string) => void;
 };

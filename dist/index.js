@@ -1,4 +1,4 @@
-import { Server as __Server, } from "@grpc/grpc-js";
+import { status, Server as __Server, } from "@grpc/grpc-js";
 /**
  * gRPC server.
  *
@@ -25,7 +25,6 @@ export class Server extends __Server {
                 await this.handler(call, callback, implementation[key]);
             };
         }
-        this.logger?.debug(`Adding service ${service} to gRPC server`);
         super.addService(service, proxies);
     }
     /**
@@ -34,19 +33,17 @@ export class Server extends __Server {
     async handler(call, callback, implementation) {
         try {
             await Promise.resolve(implementation(call, (e, ...args) => {
-                if (e instanceof Error) {
-                    let formattedError = { ...e, code: 13 };
-                    this.logger?.error(formattedError, "An error occurred while handling the gRPC call");
-                    if (this.formatError) {
-                        formattedError = this.formatError(e);
-                    }
+                let formattedError = e;
+                this.logger?.error(formattedError, "An error occurred while handling the gRPC call.");
+                if (this.formatError) {
+                    formattedError = this.formatError(e);
                 }
                 callback(e, ...args);
             }));
         }
         catch (e) {
-            let formattedError = { ...e, code: 13 };
-            this.logger?.error(formattedError, "An error occurred while handling the gRPC call");
+            let formattedError = e;
+            this.logger?.error(formattedError, "An error occurred while handling the gRPC callç");
             if (this.formatError) {
                 formattedError = this.formatError(e);
             }
