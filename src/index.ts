@@ -1,4 +1,5 @@
 import {
+  status,
   Server as __Server,
   type ServerErrorResponse,
   type ServerOptions as __ServerOptions,
@@ -10,16 +11,14 @@ import type { ServiceDefinition } from "@grpc/proto-loader";
 /**
  * gRPC format error.
  */
-export type GrpcFormatError = (
-  e: Readonly<ServerErrorResponse>
-) => ServerErrorResponse;
+export type GrpcFormatError = (e: unknown) => ServerErrorResponse;
 
 /**
  * gRPC logger.
  */
 export type GrpcLogger = {
   debug: (message: string) => void;
-  error: (e: ServerErrorResponse, message: string) => void;
+  error: (e: unknown, message: string) => void;
   info: (message: string) => void;
   warn: (message: string) => void;
 };
@@ -66,7 +65,6 @@ export class Server extends __Server {
       };
     }
 
-    this.logger?.debug(`Adding service ${service} to gRPC server`);
     super.addService(service, proxies);
   }
 
@@ -81,32 +79,30 @@ export class Server extends __Server {
     try {
       await Promise.resolve(
         implementation(call, (e: any, ...args: [any]) => {
-          if (e instanceof Error) {
-            let formattedError: ServerErrorResponse = { ...e, code: 13 };
+          let formattedError = e;
 
-            this.logger?.error(
-              formattedError,
-              "An error occurred while handling the gRPC call"
-            );
+          this.logger?.error(
+            formattedError,
+            "An error occurred while handling the gRPC call."
+          );
 
-            if (this.formatError) {
-              formattedError = this.formatError(e);
-            }
+          if (this.formatError) {
+            formattedError = this.formatError(e);
           }
 
           callback(e, ...args);
         })
       );
     } catch (e) {
-      let formattedError: ServerErrorResponse = { ...(e as Error), code: 13 };
+      let formattedError = e;
 
       this.logger?.error(
         formattedError,
-        "An error occurred while handling the gRPC call"
+        "An error occurred while handling the gRPC callç"
       );
 
       if (this.formatError) {
-        formattedError = this.formatError(e as Error);
+        formattedError = this.formatError(e);
       }
 
       callback(formattedError, null);
